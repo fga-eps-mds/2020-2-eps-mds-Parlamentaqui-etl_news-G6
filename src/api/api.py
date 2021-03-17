@@ -3,7 +3,7 @@ from models import *
 
 api = Blueprint('api', __name__, url_prefix='/api')
 
-@api.route('/')
+@api.route('/deputies')
 def index():
     deputies = ''
     for deputy in Deputy.objects:

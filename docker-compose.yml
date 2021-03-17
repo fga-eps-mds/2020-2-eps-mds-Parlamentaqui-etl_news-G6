@@ -6,7 +6,7 @@ services:
     container_name: prlmntq_etl_news
     restart: always
     ports:
-      - 8002:5000
+      - 8002:8002
     volumes:
       - .:/usr/src/etl_news
     networks:
