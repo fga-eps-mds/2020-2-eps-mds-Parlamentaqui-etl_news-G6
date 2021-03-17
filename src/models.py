@@ -1,5 +1,4 @@
 from mongoengine import *
-import json
 
 class Deputy(Document):
     id = IntField(primary_key=True)
@@ -32,9 +31,6 @@ class News(Document):
     update_date = DateTimeField()
     source = StringField()
 
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4) 
 
 # class Tweet(Document):
 #     tweet_id = IntField(primary_key=True)
