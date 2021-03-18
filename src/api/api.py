@@ -5,6 +5,7 @@ from operator import attrgetter
 
 api = Blueprint('api', __name__, url_prefix='/api')
 
+#Retornar um json com todos os jsons de deputados
 @api.route('/deputies')
 def index():
     full_json = {}
@@ -16,9 +17,9 @@ def index():
 
     return full_json
 
+#Pegar as duas noticias mais recentes do nosso banco de dados
 @api.route('/news')
 def news():
-    #Pegar as duas noticias mais recentes do nosso banco de dados
     all_news = News.objects
     
     #Ordenar a lista de acordo com a data.
