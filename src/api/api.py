@@ -1,5 +1,5 @@
 import json
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from models import *
 from operator import attrgetter
 
@@ -24,11 +24,8 @@ def news():
     
     #Ordenar a lista de acordo com a data.
     sorted_list = sorted(all_news, key=attrgetter('update_date'))
-    news_1 = sorted_list[0].to_json(sorted_list[0])
-    news_2 = sorted_list[1].to_json(sorted_list[1])
-    json_full = {
-        'news_01':news_1,
-        'news_02':news_2
-    }
+    news_list = []
+    news_list.append(sorted_list[0].to_json(sorted_list[0]))
+    news_list.append(sorted_list[1].to_json(sorted_list[1]))
 
-    return json_full
+    return jsonify(news_list)
