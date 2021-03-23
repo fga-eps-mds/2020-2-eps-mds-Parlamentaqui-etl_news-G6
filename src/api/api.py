@@ -8,14 +8,11 @@ api = Blueprint('api', __name__, url_prefix='/api')
 #Retornar um json com todos os jsons de deputados
 @api.route('/deputies')
 def index():
-    full_json = {}
-    cont = 0
+    full_json = []
     for deputy in Deputy.objects:
-        temp_json = deputy.to_json(deputy)
-        full_json[cont] = temp_json
-        cont += 1
+        full_json.append(deputy.to_json(deputy))
 
-    return full_json
+    return jsonify(full_json)
 
 #Pegar as duas noticias mais recentes do nosso banco de dados
 @api.route('/news')
