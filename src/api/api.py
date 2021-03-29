@@ -1,3 +1,4 @@
+import os
 import json
 import requests
 from flask import Blueprint, jsonify
@@ -5,7 +6,7 @@ from datetime import datetime
 from models import *
 from operator import attrgetter
 
-GOOGLE_NEWS_API_KEY = "7f0f4e99393a442fb01c8193efdb7aad"
+NEWS_API_KEY = os.getenv('GOOGLE_NEWS_API_KEY')
 api = Blueprint('api', __name__, url_prefix='/api')
 
 #Retornar um json com todos os jsons de deputados
@@ -41,7 +42,7 @@ def limpar_noticias():
 @api.route('/atualizar_noticias')
 def atualizar_noticias():
     #criar o resquest para pegar todas as noticiar relacionadas a deputado(a) e montar um json
-    r = requests.get(f'https://newsapi.org/v2/everything?q=deputado OR deputada&language=pt&sortby=publishedAt&pageSize=100&apiKey={GOOGLE_NEWS_API_KEY}')
+    r = requests.get(f'https://newsapi.org/v2/everything?q=deputado OR deputada&language=pt&sortby=publishedAt&pageSize=100&apiKey={NEWS_API_KEY}')
     all_news_json = r.json()["articles"]
 
     #pegar qual foi o ultimo id no banco
