@@ -8,7 +8,15 @@
 
 2- Copiar o conteudo de .env.dev (que já está no projeto) para esse novo .env criado
 
-3- Rodar o comando:
+2.1- É necessário que seja colocado sua key para acesso à API de notícias, e esta ficará dentro deste .env no campo GOOGLE_NEWS_API_KEY
+
+3- `Caso seja algum módulo não seja encontrado` e gere algum erro de compilação, rode o comando:
+
+        make rebuild
+
+Esse comando irá buildar novamente seu docker com todos os módulos do requirements.txt. Caso tenha rodado esse comando, não precisa ir para o passo 4.
+
+4- Rodar o comando:
         
         make start-dev
 
