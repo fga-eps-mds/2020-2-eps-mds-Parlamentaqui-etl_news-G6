@@ -21,15 +21,26 @@ def index():
 #Pegar as duas noticias mais recentes do nosso banco de dados
 @api.route('/news')
 def news():
-    all_news = News.objects
-    
-    #Ordenar a lista de acordo com a data.
-    sorted_list = sorted(all_news, key=attrgetter('update_date'), reverse = True)
-    news_list = []
-    news_list.append(sorted_list[0].to_json(sorted_list[0]))
-    news_list.append(sorted_list[1].to_json(sorted_list[1]))
+    all_news = []
+    cont = 0
 
-    return jsonify(news_list)
+    for news in News.objects:
+        all_news.append(news.to_json(news))
+        cont +=1
+
+    print("\n", cont, "\n")
+
+    return jsonify(all_news)
+
+    # all_news = News.objects
+    
+    # #Ordenar a lista de acordo com a data.
+    # sorted_list = sorted(all_news, key=attrgetter('update_date'), reverse = True)
+    # news_list = []
+    # news_list.append(sorted_list[0].to_json(sorted_list[0]))
+    # news_list.append(sorted_list[1].to_json(sorted_list[1]))
+
+    # return jsonify(news_list)
 
 #Atualizar as noticias do banco de dado de acordo com a API Google News
 @api.route('/limpar_noticias')
@@ -43,12 +54,17 @@ def limpar_noticias():
 def atualizar_noticias():
     #criar o resquest para pegar todas as noticiar relacionadas a deputado(a) e montar um json
     r = requests.get(f'https://newsapi.org/v2/everything?q=deputado OR deputada&language=pt&sortby=publishedAt&pageSize=100&apiKey={NEWS_API_KEY}')
+    
+    print("\n", r.json()['totalResults'],"\n")
+    
     all_news_json = r.json()["articles"]
+
+    return jsonify(all_news_json)
 
     #pegar qual foi o ultimo id no banco
     last_id = 0
 
-    if len(News.objects) is 0:
+    if len(News.objects) == 0:
         last_id = 0
     else:
         last_id = News.objects().order_by('id')[0].id
@@ -80,15 +96,15 @@ def atualizar_noticias():
                 #a noticia nao se encontra no banco de dados e o deputado foi verificado, portanto adicionar essa noticia
                 last_id = last_id + 1
                 populate_news_1 = News(
-                id=last_id,
-                deputy_id=deputy.id,
-                link=item["url"] if item["url"] is not None else None,
-                photo=item["urlToImage"] if item["urlToImage"] is not None else None,
-                title=item["title"] if item["title"] is not None else None,
-                abstract=item["description"] if item["description"] is not None else None,
-                deputy_name=deputy.name,
-                update_date=news_date,
-                source=item["source"]["name"]
+                    id=last_id,
+                    deputy_id=deputy.id,
+                    link=item["url"] if item["url"] is not None else None,
+                    photo=item["urlToImage"] if item["urlToImage"] is not None else None,
+                    title=item["title"] if item["title"] is not None else None,
+                    abstract=item["description"] if item["description"] is not None else None,
+                    deputy_name=deputy.name,
+                    update_date=news_date,
+                    source=item["source"]["name"]
                 ).save()
 
     #cria uma nova lista com todos os objetos criados de noticia para transformá-lo em uma lista de json
@@ -97,3 +113,13 @@ def atualizar_noticias():
         news_list.append(item.to_json(item))
 
     return jsonify(news_list)
+
+@api.route('/<deputy_id>')
+def encontra_noticias_deputado(deputy_id):
+    deputy_news = []
+    
+    for item in News.objects:
+        if int(item.deputy_id) == int(deputy_id):
+            deputy_news.append(item.to_json(item))
+
+    return jsonify(deputy_news)
