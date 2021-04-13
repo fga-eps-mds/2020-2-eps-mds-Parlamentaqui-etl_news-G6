@@ -114,7 +114,7 @@ def atualizar_noticias():
 
     return jsonify(news_list)
 
-@api.route('/<deputy_id>')
+@api.route('/get_news_by_id/<deputy_id>')
 def encontra_noticias_deputado(deputy_id):
     deputy_news = []
     
