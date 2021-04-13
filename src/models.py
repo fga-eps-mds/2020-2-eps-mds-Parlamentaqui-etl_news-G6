@@ -20,26 +20,26 @@ class Deputy(Document):
     twitter_username = StringField()
     facebook_username = StringField()
 
-    def to_json(self, context):
+    def to_json(self):
         return{
-            'id':context.id,
-            'name':context.name,
-            'photo_url':context.photo_url,
-            'initial_legislature_id':context.initial_legislature_id,
-            'final_legislature_id':context.final_legislature_id,
-            'initial_legislature_year':context.initial_legislature_year,
-            'final_legislature_year':context.final_legislature_year,
-            'last_activity_date':context.last_activity_date,
-            'full_name':context.full_name,
-            'sex':context.sex,
-            'email':context.email,
-            'birth_date':context.birth_date,
-            'death_date':context.death_date,
-            'federative_unity':context.federative_unity,
-            'party':context.party,
-            'instagram_username':context.instagram_username,
-            'twitter_username':context.twitter_username,
-            'facebook_username':context.facebook_username
+            'id':self.id,
+            'name':self.name,
+            'photo_url':self.photo_url,
+            'initial_legislature_id':self.initial_legislature_id,
+            'final_legislature_id':self.final_legislature_id,
+            'initial_legislature_year':self.initial_legislature_year,
+            'final_legislature_year':self.final_legislature_year,
+            'last_activity_date':self.last_activity_date,
+            'full_name':self.full_name,
+            'sex':self.sex,
+            'email':self.email,
+            'birth_date':self.birth_date,
+            'death_date':self.death_date,
+            'federative_unity':self.federative_unity,
+            'party':self.party,
+            'instagram_username':self.instagram_username,
+            'twitter_username':self.twitter_username,
+            'facebook_username':self.facebook_username
         }
 
 class News(Document):
@@ -53,17 +53,17 @@ class News(Document):
     update_date = DateTimeField()
     source = StringField()
 
-    def to_json(self, context):
+    def to_json(self):
         return {
-            'id':context.id,
-            'deputy_id':context.deputy_id,
-            'link': context.link,
-            'photo':context.photo,
-            'title':context.title,
-            'abstract':context.abstract,
-            'deputy_name':context.deputy_name,
-            'update_date':context.update_date,
-            'source':context.source
+            'id':self.id,
+            'deputy_id':self.deputy_id,
+            'link': self.link,
+            'photo':self.photo,
+            'title':self.title,
+            'abstract':self.abstract,
+            'deputy_name':self.deputy_name,
+            'update_date':self.update_date,
+            'source':self.source
         }
 
 
