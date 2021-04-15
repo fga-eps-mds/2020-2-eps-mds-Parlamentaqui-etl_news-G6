@@ -14,9 +14,19 @@ api = Blueprint('api', __name__, url_prefix='/api')
 def index():
     full_json = []
     for deputy in Deputy.objects:
-        full_json.append(deputy.to_json(deputy))
+        full_json.append(deputy.to_json())
 
     return jsonify(full_json)
+
+
+@api.route('/deputy/<id>')
+def deputy(id):
+    for deputy in Deputy.objects:
+        if int(deputy.id) == int(id):
+            return deputy.to_json()
+
+    return f'Não foi encontrado nenhum deputado com id: {id}'
+    
 
 #Pegar as duas noticias mais recentes do nosso banco de dados
 @api.route('/news')
@@ -26,10 +36,16 @@ def news():
     #Ordenar a lista de acordo com a data.
     sorted_list = sorted(all_news, key=attrgetter('update_date'), reverse = True)
     news_list = []
-    news_list.append(sorted_list[0].to_json(sorted_list[0]))
-    news_list.append(sorted_list[1].to_json(sorted_list[1]))
+    news_list.append(sorted_list[0].to_json())
+    news_list.append(sorted_list[1].to_json())
 
     return jsonify(news_list)
+
+@api.route('/all_news')
+def all_news():
+    all_news = []
+    for item in News.objects:
+        all_news.append
 
 #Atualizar as noticias do banco de dado de acordo com a API Google News
 @api.route('/limpar_noticias')
@@ -44,7 +60,6 @@ def atualizar_noticias():
     #criar o resquest para pegar todas as noticiar relacionadas a deputado(a) e montar um json
     r = requests.get(f'https://newsapi.org/v2/everything?q=deputado OR deputada&language=pt&sortby=publishedAt&pageSize=100&apiKey={NEWS_API_KEY}')
     all_news_json = r.json()["articles"]
-
     #pegar qual foi o ultimo id no banco
     last_id = 0
 
@@ -91,9 +106,13 @@ def atualizar_noticias():
                 source=item["source"]["name"]
                 ).save()
 
+                #atualizar a ultima atividade recente envolvendo esse deputado
+                deputy.last_activity_date = news_date
+                deputy.save()
+
     #cria uma nova lista com todos os objetos criados de noticia para transformá-lo em uma lista de json
     news_list = []
     for item in News.objects:
-        news_list.append(item.to_json(item))
+        news_list.append(item.to_json())
 
     return jsonify(news_list)
