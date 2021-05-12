@@ -38,9 +38,8 @@ def news():
     sorted_list = sorted(all_news, key=attrgetter('update_date'), reverse = True)
     news_list = []
     
-    if len(sorted_list) > 2:
-        news_list.append(sorted_list[0].to_json())
-        news_list.append(sorted_list[1].to_json())
+    for item in sorted_list[0:2]:
+        news_list.append(item.to_json())
 
     return jsonify(news_list)
 
@@ -104,4 +103,4 @@ def atualizar_noticias():
                 deputy.last_activity_date = news_date
                 deputy.save()
 
-    return "Done"
+    return "Done. Use /all_news to get all news in data base."
