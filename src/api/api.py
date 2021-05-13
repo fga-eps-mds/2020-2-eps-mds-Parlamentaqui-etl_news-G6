@@ -78,7 +78,6 @@ def atualizar_noticias():
             continue
 
         published_new_date = str(item["publishedAt"])
-        published_new_date = published_new_date
         news_date = datetime.strptime(published_new_date, "%Y-%m-%dT%H:%M:%SZ") if len(str(item["publishedAt"])) > 4 else None
 
         #acessar cada deputado para bverificar se o nome dele está em algum item do json da noticia
