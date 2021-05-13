@@ -31,7 +31,7 @@ class EtlTests(unittest.TestCase):
     def test_api_index(self):
         data_expected = 'Não foi encontrado nenhum deputado com id: 0001454'
 
-        request = self.client.get(url_for('api.deputy/0001454',))
+        request = self.client.get(url_for('api.deputy/0001454'))
         self.assertEqual(data_expected , request.data.decode())
 
     def test_news_status(self):
@@ -71,5 +71,5 @@ class EtlTests(unittest.TestCase):
     def tearDown(self):
         self.context.pop()
 
-# if __name__=='__main__':
-#     unittest.main()
+if __name__=='__main__':
+    unittest.main()
