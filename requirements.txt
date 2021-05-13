@@ -17,3 +17,5 @@ certifi==2020.12.5
 chardet==4.0.0
 requests==2.25.1
 urllib3==1.26.4
+requests_mock==1.9.2 
+mock==3.0.5
