@@ -47,17 +47,30 @@ class EtlTests(unittest.TestCase):
     def test_update_news(self, request_mock):
         url = (f'https://newsapi.org/v2/everything?q=deputado OR deputada&language=pt&sortby=publishedAt&pageSize=100&apiKey={NEWS_API_KEY}')
         data = {
-            'Codigo': '12345',
-            'Cidade': 'Natal/RN',
-            'Status': 'Saiu para entrega'
+            "status": "ok",
+            "totalResults": 4321,
+            "articles": [
+                {
+                    "source": {
+                        "id": null,
+                        "name": "Terra.com.br"
+                    },
+                    "author": "Estadão Conteúdo",
+                    "title": "Câmara aprova projeto que flexibiliza regras de licenciamento ambiental",
+                    "description": "Frente Parlamentar Ambientalista e especialistas repudiam texto; ligado à ala da agropecuária do Legislativo, relator fala em texto 'equilibrado' e sem sem ...",
+                    "url": "https://www.terra.com.br/noticias/ciencia/sustentabilidade/camara-aprova-projeto-que-flexibiliza-regras-de-licenciamento-ambiental,730883c65b2677337ef158208c1238bf8foz0mmo.html",
+                    "urlToImage": "https://p2.trrsf.com/image/fget/cf/1200/628/middle/s1.trrsf.com/atm/3/core/_img/terra-logo-white-bg-v3.jpg",
+                    "publishedAt": "2021-05-13T03:39:16Z",
+                    "content": "BRASÍLIA - O projeto da nova Lei Geral do Licenciamento Ambiental foi aprovado na madrugada desta quinta-feira, 13, pelo plenário da Câmara dos Deputados. Com maioria na Casa, a bancada ruralista apr… [+8675 chars]"
+                }
+            ]
         }
-        request = self.client.get(url_for('api.atualizar_noticias'))
         request_mock.get(url, json=data)
-        self.assertEqual(self.correios.encomenda('PR12345BR'), data)
-
+        request = self.client.get(url_for('api.atualizar_noticias'))
+        self.assertEqual(200 , request.status_code)
 
     def tearDown(self):
         self.context.pop()
 
-if __name__=='__main__':
-    unittest.main()
+# if __name__=='__main__':
+#     unittest.main()

@@ -42,6 +42,7 @@ class Deputy(Document):
             'facebook_username':self.facebook_username
         }
 
+
 class News(Document):
     id = IntField(primary_key=True)
     deputy_id = IntField()
