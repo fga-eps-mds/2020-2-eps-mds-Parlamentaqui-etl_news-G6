@@ -17,16 +17,15 @@ class EtlTests(unittest.TestCase):
         self.client = self.app.test_client()
 
     def test_index(self):
-        request = self.client.get(url_for('index'))
-        self.assertEqual(200 , request.status_code)
+        request = self.client.get(url_for('/'))
         self.assertEqual('ETL News' , request.data.decode())
 
-    def test_index(self):
-        request = self.client.get(url_for('index'))
+    def test_index_status(self):
+        request = self.client.get(url_for('/'))
         self.assertEqual(200 , request.status_code)
 
     def test_api_index(self):
-        request = self.client.get(url_for('api.index'))
+        request = self.client.get(url_for('api./'))
         self.assertEqual(200 , request.status_code)
 
     def test_api_index(self):
