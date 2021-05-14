@@ -13,8 +13,9 @@ api = Blueprint('api', __name__, url_prefix='/api')
 @api.route('/deputies')
 def index():
     full_json = []
-    for deputy in Deputy.objects:
-        full_json.append(deputy.to_json())
+
+    for item in Deputy.objects:
+        full_json.append(item.to_json())
 
     return jsonify(full_json)
 
@@ -25,8 +26,7 @@ def deputy(id):
         if int(deputy.id) == int(id):
             return deputy.to_json()
 
-    return f'Não foi encontrado nenhum deputado com id: {id}'
-    
+    return {}
 
 #Pegar as duas noticias mais recentes do nosso banco de dados
 @api.route('/news')
@@ -36,8 +36,8 @@ def news():
     #Ordenar a lista de acordo com a data.
     sorted_list = sorted(all_news, key=attrgetter('update_date'), reverse = True)
     news_list = []
-    news_list.append(sorted_list[0].to_json())
-    news_list.append(sorted_list[1].to_json())
+    for item in sorted_list[0:2]:
+        news_list.append(item.to_json())
 
     return jsonify(news_list)
 
@@ -45,14 +45,15 @@ def news():
 def all_news():
     all_news = []
     for item in News.objects:
-        all_news.append
+        all_news.append(item.to_json())
+
+    return jsonify(all_news)
 
 #Atualizar as noticias do banco de dado de acordo com a API Google News
 @api.route('/limpar_noticias')
 def limpar_noticias():
     News.objects.all().delete()
     return str(len(News.objects))
-
 
 #Atualizar as noticias do banco de dado de acordo com a API Google News
 @api.route('/atualizar_noticias')
@@ -75,24 +76,17 @@ def atualizar_noticias():
     
     #para cada json na lista de todos os jsons, iterar para saber se é uma noticia de algum deputado em questão.
     for item in all_news_json:
+        old_news = News.objects(abstract=item["description"]).first()
+        if old_news:
+            continue
+
         published_new_date = str(item["publishedAt"])
-        published_new_date = published_new_date[0:10]
-        news_date = datetime.strptime(published_new_date, "%Y-%m-%d") if len(str(item["publishedAt"])) > 4 else None
+        news_date = news_date = datetime.strptime(published_new_date, "%Y-%m-%dT%H:%M:%SZ") if len(str(item["publishedAt"])) > 4 else None
 
         #acessar cada deputado para bverificar se o nome dele está em algum item do json da noticia
         for deputy in Deputy.objects:
             if (deputy.name in item["content"]) or (deputy.name in item["description"]) or (deputy.name in item["title"]):
                 
-                #caso a noticia ja exista no banco de dados, apenas ignorá-la
-                need_insertion = True
-                for news_item in all_news_list:
-                    if (news_item.deputy_id is deputy.id) and (news_item.title is item["title"]) and (news_item.update_date is news_date):
-                        need_insertion = False 
-                        break
-                if not need_insertion:
-                    continue
-
-                #a noticia nao se encontra no banco de dados e o deputado foi verificado, portanto adicionar essa noticia
                 last_id = last_id + 1
                 populate_news_1 = News(
                 id=last_id,
@@ -111,8 +105,13 @@ def atualizar_noticias():
                 deputy.save()
 
     #cria uma nova lista com todos os objetos criados de noticia para transformá-lo em uma lista de json
-    news_list = []
-    for item in News.objects:
-        news_list.append(item.to_json())
+    return "Done. Use /all_news to get all news in data base."
 
-    return jsonify(news_list)
+@api.route('/get_news_by_id/<id>')
+def get_news_by_id(id):
+    news_list = list(News.objects(deputy_id=id).all())
+    return_json_list = []
+    for item in news_list:
+        return_json_list.append(item.to_json())
+    
+    return jsonify(return_json_list)
