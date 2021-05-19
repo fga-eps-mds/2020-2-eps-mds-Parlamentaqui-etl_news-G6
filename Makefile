@@ -6,3 +6,6 @@ rebuild:
 
 start-prod:
 	docker-compose up --build --detach 
+
+test:
+	sudo docker run prlmntq_etl_news sh -c 'python3 src/test.py'

@@ -57,7 +57,8 @@ class Deputy(Document):
             'office_phone':self.office_phone,
             'office_email':self.office_email
         }
-        
+
+
 class News(Document):
     id = IntField(primary_key=True)
     deputy_id = IntField()
